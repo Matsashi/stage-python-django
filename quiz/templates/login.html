@@ -1,0 +1,15 @@
+{% extends 'dependencies.html' %}
+{% load static%}
+{% block content %}
+<div class="container jumbotron">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p><input type="text" name="username" placeholder="Login..."></p>
+        <p><input type="password" name="password" placeholder="Mot de passe..." ></p>
+        <input class="btn btn-success" type="submit" value="Login">
+        <p>Vous n'avez pas de compte ?
+            <a href="{% url 'register' %}">Inscription</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
