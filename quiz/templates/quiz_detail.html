@@ -3,7 +3,14 @@
 {% block content %}
 {% load static %}
 <div class="container ">
-<h1>Bienvenu(e) au squiz-game !</h1>
+<h1>{{ quiz.title }}</h1>
+    <small>
+        {{ quiz.created_on.date }} |&nbsp;
+        Catégories:&nbsp;
+        {% for category in quiz.categorie_set.all %}
+        <a href="{% url 'quiz_category' category.name %}">{{ category.name }}</a>&nbsp;
+        {% endfor %}
+    </small>
 
 <div align="right " id="displaytimer"><b>Timer: 0 seconds</b></div>
 

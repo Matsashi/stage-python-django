@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<div class="col-md-8 offset-md-2">
+    <h1>Quiz récents</h1>
+    <hr>
+    {% for quiz in quiz %}
+
+    <h2>
+        <a href="{% url 'quiz_detail' quiz.pk%}">{{ quiz.title }}</a>
+    </h2>
+    <small>
+        {{ quiz.created_on.date }} |&nbsp;
+        Catégories:&nbsp;
+        {% for category in quiz.categories.all %}
+        <a href="{% url 'quiz_category' category.name %}">{{ category.name }}</a>&nbsp;
+        {% endfor %}
+    </small>
+    {% endfor %}
+</div>
+{% endblock %}

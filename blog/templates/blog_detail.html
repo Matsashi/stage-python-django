@@ -6,7 +6,7 @@
     <small>
         {{ post.created_on.date }} |&nbsp;
         Categories:&nbsp;
-        {% for category in post.categories.all %}
+        {% for category in post.categorie_set.all %}
         <a href="{% url 'blog_category' category.name %}">
             {{ category.name }}
         </a>&nbsp;

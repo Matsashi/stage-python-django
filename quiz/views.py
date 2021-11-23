@@ -1,14 +1,29 @@
 from django.shortcuts import redirect, render
+from django.db.models import Prefetch
 from django.contrib.auth import login, logout, authenticate
 from .forms import *
 from .models import *
 from django.http import HttpResponse
 
 
-def quiz(request):
+def quiz_index(request):
+    #quiz = Quiz.objects.prefetch_related(Prefetch('quiz', queryset=Quiz.objects.order_by("-created_on")))
+    #quiz = Quiz.objects.order_by("-created_on").prefetch_related("title")
+    quiz = Quiz.objects.all().order_by("-created_on")
+    context = {"quiz": quiz}
+    return render(request, "quiz_index.html", context)
+
+
+def quiz_category(request, category):
+    quiz = Quiz.objects.filter(categories__name__contains=category).order_by("-created_on")
+    context = {"category": category, "quiz": quiz}
+    return render(request, "quiz_category.html", context)
+
+
+def quiz_detail(request):
     if request.method == 'POST':
         print(request.POST)
-        questions = QuesModel.objects.all()
+        questions = Question.objects.all()
         score = 0
         wrong = 0
         correct = 0
@@ -23,7 +38,7 @@ def quiz(request):
                 correct += 1
             else:
                 wrong += 1
-        percent = score / (total * 10) * 100
+        percent = correct / total * 100
         context = {
             'score': score,
             'time': request.POST.get('timer'),
@@ -34,7 +49,7 @@ def quiz(request):
         }
         return render(request, 'result.html', context)
     else:
-        questions = QuesModel.objects.all()
+        questions = Question.objects.all()
         context = {
             'questions': questions
         }
