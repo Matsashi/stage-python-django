@@ -15,12 +15,13 @@ def quiz_index(request):
 
 
 def quiz_category(request, category):
-    quiz = Quiz.objects.filter(categories__name__contains=category).order_by("-created_on")
+    quiz = Quiz.objects.filter(categorie_set__name__contains=category).order_by("-created_on")
     context = {"category": category, "quiz": quiz}
     return render(request, "quiz_category.html", context)
 
 
-def quiz_detail(request):
+def quiz_detail(request, pk):
+    quiz = Quiz.objects.get(pk=pk)
     if request.method == 'POST':
         print(request.POST)
         questions = Question.objects.all()
@@ -29,15 +30,16 @@ def quiz_detail(request):
         correct = 0
         total = 0
         for q in questions:
-            total += 1
-            print(request.POST.get(q.question))
-            print(q.ans)
-            print()
-            if q.ans == request.POST.get(q.question):
-                score += 10
-                correct += 1
-            else:
-                wrong += 1
+            if q.quiz_set_id == quiz.id:
+                total += 1
+                print(request.POST.get(q.question))
+                print(q.ans)
+                print()
+                if q.ans == request.POST.get(q.question):
+                    score += 10
+                    correct += 1
+                else:
+                    wrong += 1
         percent = correct / total * 100
         context = {
             'score': score,
@@ -51,9 +53,10 @@ def quiz_detail(request):
     else:
         questions = Question.objects.all()
         context = {
+            'quiz': quiz,
             'questions': questions
         }
-        return render(request, 'index.html', context)
+        return render(request, 'quiz_detail.html', context)
 
 
 def addQuestion(request):
